@@ -1,4 +1,4 @@
-public interface IChatbot
+public interface IChatapp
 {
     /*
     Main methods
@@ -13,7 +13,7 @@ public interface IChatbot
     /// Get the current user of the application
     /// </summary>
     /// <returns>string</returns>
-    string GetCurrentuser();
+    string GetCurrentUser();
     /// <summary>
     /// Run the main application
     /// </summary>
@@ -26,13 +26,13 @@ public interface IChatbot
     /// Get the uptime/lifetime of the current session
     /// </summary>
     /// <returns></returns>
-    DateTime GetSessionUptime();
+    TimeSpan GetSessionUptime();
     /// <summary>
     /// Log information to a file
     /// </summary>
     /// <param name="filePath">path to the logfile</param>
     /// <param name="logContent">content of logfile</param>
-    void Logger(string filePath, string logContent);
+    void Log(string filePath, string logContent);
 
     /// <summary>
     /// Run the main application in debug mode
