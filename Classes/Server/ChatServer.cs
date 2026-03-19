@@ -68,4 +68,43 @@ public sealed class ChatServer
         }
     }
 
+    private async Task BroadcastAsync(string message, Guid senderId, CancellationToken token)
+    {
+        var tasks = new List<Task>();
+
+        foreach (var pair in _clients)
+        {
+            if (pair.Key == senderId)
+            {
+                continue;
+            }
+
+            tasks.Add(SendToClientAsync(pair.Value, message, token));
+        }
+
+        await Task.WhenAll(tasks);
+    }
+
+    private async Task SendToClientAsync(TcpClient client, string message, CancellationToken token)
+    {
+        if (!client.Connected)
+        {
+            return;
+        }
+
+        try
+        {
+            using var streamWriter = new StreamWriter(client.GetStream(), Encoding.UTF8, leaveOpen: true)
+            {
+                AutoFlush = true
+            };
+
+            await streamWriter.WriteAsync(message);
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine($"Messages could not be fetched, an error occured on the server. {e.Message}");
+        }
+    }
+
 }
