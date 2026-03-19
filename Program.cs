@@ -1,24 +1,28 @@
-﻿namespace ChatappCore;
+﻿using System.Net.Sockets;
+
+namespace ChatappCore;
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
-        var chatApp = new Chatapp();
+        var server = new ChatServer(System.Net.IPAddress.Any, 9001);
+
+        var client = new ChatClient("John Doe");
 
         if (args.Length == 0)
         {
-            Console.WriteLine("Usage: <app> - Run the app normally\n<debug> - Run the app in debug mode");
+            Console.WriteLine("Usage: <server> - Run the server\n<client> - Run the client");
         }
 
-        if (args.Length > 0 && args[0] == "app")
+        if (args.Length > 0 && args[0] == "server")
         {
-            chatApp.RunApp();
+            await server.StartServerAsync();
         }
 
-        if (args.Length > 0 && args[0] == "debug")
+        if (args.Length > 0 && args[0] == "client")
         {
-            chatApp.RunInDebugMode();
+            await client.RunClientAsync("127.0.0.1", 9001, default);
         }
     }
 }
